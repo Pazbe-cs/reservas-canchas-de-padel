@@ -1,0 +1,56 @@
+# Diseño del Backend - Sistema de Reservas de Canchas de Pádel
+
+## Objetivo
+Desarrollar una API REST para gestionar reservas de canchas de pádel.
+El sistema permitirá:
+- Registrar canchas
+- Registrar usuarios
+- Crear y consultar reservas
+- Evitar reservas solapadas (doble reserva para la misma cancha y horario)
+
+---
+
+## 1. Entidades principales
+
+### 1.1 Usuario
+- `id` (PK, entero)
+- `nombre` (texto)
+- `telefono` (texto, opcional)
+- `email` (texto, opcional)
+
+### 1.2 Cancha
+- `id` (PK, entero)
+- `nombre` (texto) – ej: "Cancha 1"
+- `tipo` (texto, opcional) – ej: "techada", "descubierta"
+- `activo` (booleano) – indica si la cancha está habilitada
+
+### 1.3 Reserva
+- `id` (PK, entero)
+- `cancha_id` (FK → Cancha)
+- `usuario_id` (FK → Usuario)
+- `fecha` (date)
+- `hora_inicio` (time)
+- `hora_fin` (time)
+- `estado` (texto) – ej: "ACTIVA", "CANCELADA"
+
+**Regla importante:**  
+No se permite crear una reserva si ya existe otra reserva ACTIVA para la misma cancha, misma fecha y horario solapado.
+
+---
+
+## 2. Endpoints de la API (versión inicial)
+
+### 2.1 Canchas
+
+#### GET /canchas
+- Devuelve el listado de canchas.
+
+#### POST /canchas
+- Crea una nueva cancha.
+- Cuerpo (JSON):
+```json
+{
+  "nombre": "Cancha 1",
+  "tipo": "techada",
+  "activo": true
+}
